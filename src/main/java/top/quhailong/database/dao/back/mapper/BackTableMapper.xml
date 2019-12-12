@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.quhailong.database.dao.back.BackTableDao">
+    <update id="updateColumnType">
+        alter table ${databaseName}.${tableName} modify ${columnName} ${columnType}
+        <if test="extra == 'on update CURRENT_TIMESTAMP'">
+            ON UPDATE CURRENT_TIMESTAMP
+        </if>
+        <if test="columnDefault != null">
+            default ${columnDefault}
+        </if>
+        <if test="isNullable == 'NO'">
+            not null
+        </if>
+        <if test="isNullable == 'YES'">
+            null
+        </if>
+        <if test="columnComment != null">
+            COMMENT #{columnComment,jdbcType=VARCHAR}
+        </if>
+        <if test="extra == 'auto_increment'">
+            auto_increment
+        </if>
+    </update>
+
+    <update id="createColumnIndex">
+        alter table ${databaseName}.${tableName} add
+        <if test="columnKey == 'MUL'">
+            index index_${columnName} (${columnName})
+        </if>
+        <if test="columnKey == 'UNI'">
+            unique index_${columnName} (${columnName})
+        </if>
+    </update>
+</mapper>
